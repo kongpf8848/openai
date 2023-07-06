@@ -1,0 +1,29 @@
+apply plugin: 'java-library'
+
+group 'io.github.kongpf8848'
+version '0.1-SNAPSHOT'
+
+dependencies {
+    api project(":openai-api")
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.14"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:converter-jackson:2.9.0"
+    implementation 'com.azure:azure-ai-openai:1.0.0-beta.2'
+}
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+test {
+    useJUnitPlatform()
+}
