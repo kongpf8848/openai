@@ -6,6 +6,7 @@ import io.github.kongpf8848.openai.models.AzureKeyCredential;
 import io.github.kongpf8848.openai.models.ChatCompletions;
 import io.github.kongpf8848.openai.models.ChatCompletionsOptions;
 import io.github.kongpf8848.openai.models.OpenAIKeyCredential;
+import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -26,15 +27,15 @@ public final class OpenAIClient {
     }
 
     public ChatCompletions getChatCompletions(ChatCompletionsOptions chatCompletionsOptions) {
-        Response<ChatCompletions> response = getChatCompletionsWithResponse(chatCompletionsOptions);
+        Response<ChatCompletions> response = serviceClient.getChatCompletionsWithResponse(chatCompletionsOptions);
         if (response == null) {
             return null;
         }
         return response.body();
     }
 
-    public Response<ChatCompletions> getChatCompletionsWithResponse(ChatCompletionsOptions chatCompletionsOptions) {
-        return serviceClient.getChatCompletionsWithResponse(chatCompletionsOptions);
+    public Observable<ChatCompletions> getChatCompletionsAsync(ChatCompletionsOptions chatCompletionsOptions) {
+        return serviceClient.getChatCompletionsWithResponseAsync(chatCompletionsOptions);
     }
 
 
