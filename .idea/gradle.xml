@@ -10,7 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/openai" />
-            <option value="$PROJECT_DIR$/openai-api" />
             <option value="$PROJECT_DIR$/samples" />
           </set>
         </option>

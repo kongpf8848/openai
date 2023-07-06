@@ -4,7 +4,6 @@ group 'io.github.kongpf8848'
 version '0.1-SNAPSHOT'
 
 dependencies {
-    api project(":openai-api")
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     implementation "com.squareup.okhttp3:okhttp:4.9.0"
