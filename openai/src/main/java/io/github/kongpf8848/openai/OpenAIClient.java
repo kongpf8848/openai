@@ -1,6 +1,7 @@
 package io.github.kongpf8848.openai;
 
 import io.github.kongpf8848.openai.core.IterableStream;
+import io.github.kongpf8848.openai.implementation.AzureClientImpl;
 import io.github.kongpf8848.openai.implementation.OpenAIClientImpl;
 import io.github.kongpf8848.openai.implementation.OpenAIServerSentEvents;
 import io.github.kongpf8848.openai.models.ChatCompletions;
@@ -11,14 +12,23 @@ import retrofit2.Response;
 
 public final class OpenAIClient {
 
-    private final OpenAIClientImpl serviceClient;
+    private final OpenAIClientImpl openAIClient;
+    private final AzureClientImpl azureClient;
 
-    OpenAIClient(OpenAIClientImpl serviceClient) {
-        this.serviceClient = serviceClient;
+    OpenAIClient(OpenAIClientImpl client) {
+        this.openAIClient = client;
+        this.azureClient = null;
+    }
+
+    OpenAIClient(AzureClientImpl client) {
+        this.openAIClient = null;
+        this.azureClient = client;
     }
 
     public ChatCompletions getChatCompletions(ChatCompletionsOptions chatCompletionsOptions) {
-        Response<ChatCompletions> response = serviceClient.getChatCompletionsWithResponse(chatCompletionsOptions);
+        Response<ChatCompletions> response = openAIClient != null
+                ? openAIClient.getChatCompletionsWithResponse(chatCompletionsOptions)
+                :azureClient.getChatCompletionsWithResponse(chatCompletionsOptions);
         if (response == null) {
             return null;
         }
@@ -27,7 +37,9 @@ public final class OpenAIClient {
 
     public IterableStream<ChatCompletions> getChatCompletionsStream(ChatCompletionsOptions chatCompletionsOptions) {
         chatCompletionsOptions.setStream(true);
-        Response<ResponseBody> response = serviceClient.getChatCompletionsWithResponseStream(chatCompletionsOptions);
+        Response<ResponseBody> response = openAIClient!=null
+                ? openAIClient.getChatCompletionsWithResponseStream(chatCompletionsOptions)
+                : azureClient.getChatCompletionsWithResponseStream(chatCompletionsOptions);
         if (response == null || response.body() == null) {
             return null;
         }
@@ -35,7 +47,6 @@ public final class OpenAIClient {
         return new IterableStream<>(sse.getEvents());
 
     }
-
 
 
 }

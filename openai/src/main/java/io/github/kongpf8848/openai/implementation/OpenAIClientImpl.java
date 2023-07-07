@@ -3,7 +3,6 @@ package io.github.kongpf8848.openai.implementation;
 import io.github.kongpf8848.openai.models.ChatCompletions;
 import io.github.kongpf8848.openai.models.ChatCompletionsOptions;
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;

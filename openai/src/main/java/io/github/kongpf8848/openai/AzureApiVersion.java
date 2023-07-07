@@ -1,6 +1,6 @@
 package io.github.kongpf8848.openai;
 
-public enum AzureServiceVersion {
+public enum AzureApiVersion {
 
     V2022_12_01("2022-12-01"),
 
@@ -8,7 +8,7 @@ public enum AzureServiceVersion {
 
     private final String version;
 
-    AzureServiceVersion(String version) {
+    AzureApiVersion(String version) {
         this.version = version;
     }
 

@@ -1,11 +1,9 @@
 package io.github.kongpf8848.samples;
 
+import io.github.kongpf8848.openai.AzureApiVersion;
 import io.github.kongpf8848.openai.OpenAIAsyncClient;
 import io.github.kongpf8848.openai.OpenAIClientBuilder;
-import io.github.kongpf8848.openai.models.ChatCompletions;
-import io.github.kongpf8848.openai.models.ChatCompletionsOptions;
-import io.github.kongpf8848.openai.models.ChatMessage;
-import io.github.kongpf8848.openai.models.OpenAIKeyCredential;
+import io.github.kongpf8848.openai.models.*;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -16,16 +14,19 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        testStream();
+        testAzureStream();
 
 
         Thread.sleep(20000);
     }
 
 
-    private static void testStream(){
+    private static void testAzureStream(){
         OpenAIAsyncClient client = new OpenAIClientBuilder()
-                .credential(new OpenAIKeyCredential("sk-xxxxxxxxxxxxxxxxxxxxx"))
+                .credential(new AzureKeyCredential("xxx"))
+                .endpoint("https://xxx.openai.azure.com/")
+                .deploymentId("xxx")
+                .apiVersion(AzureApiVersion.V2023_03_15_PREVIEW)
                 .buildAsyncClient();
 
         List<ChatMessage> chatMessageList = new ArrayList<>();
