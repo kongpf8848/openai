@@ -16,7 +16,6 @@ public class Main {
 
         testAzureStream();
 
-
         Thread.sleep(20000);
     }
 
