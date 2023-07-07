@@ -35,7 +35,9 @@ public final class ChatCompletions {
             @JsonProperty(value = "choices") List<ChatChoice> choices,
             @JsonProperty(value = "usage") CompletionsUsage usage) {
         this.id = id;
+        this.object = object;
         this.created = created;
+        this.model = model;
         this.choices = choices;
         this.usage = usage;
     }
@@ -45,8 +47,16 @@ public final class ChatCompletions {
         return this.id;
     }
 
+    public String getObject() {
+        return this.object;
+    }
+
     public int getCreated() {
         return this.created;
+    }
+
+    public String getModel() {
+        return this.model;
     }
 
     public List<ChatChoice> getChoices() {

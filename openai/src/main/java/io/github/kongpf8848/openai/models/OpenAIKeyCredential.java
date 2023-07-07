@@ -1,6 +1,5 @@
 package io.github.kongpf8848.openai.models;
 
-
 import java.util.Objects;
 
 public class OpenAIKeyCredential {

@@ -1,6 +1,7 @@
 package io.github.kongpf8848.samples;
 
-import io.github.kongpf8848.openai.OpenAIClient;
+import io.github.kongpf8848.openai.OpenAIAsyncClient;
+import io.github.kongpf8848.openai.OpenAIClientBuilder;
 import io.github.kongpf8848.openai.models.ChatCompletions;
 import io.github.kongpf8848.openai.models.ChatCompletionsOptions;
 import io.github.kongpf8848.openai.models.ChatMessage;
@@ -15,9 +16,17 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        OpenAIClient client = new OpenAIClient.Builder()
-                .credential(new OpenAIKeyCredential("sk-xxxxxxxxxxxxxxxxxxx"))
-                .build();
+        testStream();
+
+
+        Thread.sleep(20000);
+    }
+
+
+    private static void testStream(){
+        OpenAIAsyncClient client = new OpenAIClientBuilder()
+                .credential(new OpenAIKeyCredential("sk-xxxxxxxxxxxxxxxxxxxxx"))
+                .buildAsyncClient();
 
         List<ChatMessage> chatMessageList = new ArrayList<>();
         chatMessageList.add(new ChatMessage("user").setContent("hello"));
@@ -26,30 +35,28 @@ public class Main {
                 .setTemperature(0.8)
                 .setTopP(1.0)
                 .setPresencePenalty(1.0);
-        Observable<ChatCompletions> observable=client.getChatCompletionsAsync(options);
+        Observable<ChatCompletions> observable = client.getChatCompletionsStream(options);
         observable.subscribe(new Observer<ChatCompletions>() {
             @Override
             public void onSubscribe(Disposable d) {
-
+                System.out.println("=============onSubscribe:"+d);
             }
 
             @Override
             public void onNext(ChatCompletions chatCompletions) {
-                System.out.println("=============thread:"+Thread.currentThread().getName());
-                System.out.println("=============" + chatCompletions.getChoices().get(0).getMessage().getContent());
+                System.out.println("=============onNext:"+ chatCompletions.getChoices().get(0).getDelta().getContent());
             }
 
             @Override
             public void onError(Throwable e) {
-
+                System.out.println("=============onError:"+e);
             }
 
             @Override
             public void onComplete() {
-
+                System.out.println("=============onComplete");
             }
         });
 
-        Thread.sleep(20000);
     }
 }

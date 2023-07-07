@@ -10,13 +10,11 @@ public final class ChatChoice {
     @JsonProperty(value = "message")
     private ChatMessage message;
 
-
     @JsonProperty(value = "finish_reason")
     private String finishReason;
 
     @JsonProperty(value = "delta")
     private ChatMessage delta;
-
 
     public int getIndex() {
         return this.index;
