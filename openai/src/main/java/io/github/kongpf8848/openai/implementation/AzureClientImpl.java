@@ -2,6 +2,8 @@ package io.github.kongpf8848.openai.implementation;
 
 import io.github.kongpf8848.openai.models.ChatCompletions;
 import io.github.kongpf8848.openai.models.ChatCompletionsOptions;
+import io.github.kongpf8848.openai.models.Completions;
+import io.github.kongpf8848.openai.models.CompletionsOptions;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -21,6 +23,28 @@ public final class AzureClientImpl {
         this.deploymentId=deploymentId;
         this.apiVersion=apiVersion;
         service = retrofit.create(AzureClientImpl.AzureClientService.class);
+    }
+
+    public Response<Completions> getCompletionsWithResponse(CompletionsOptions completionsOptions) {
+        try {
+            return service.getCompletions(deploymentId,apiVersion,completionsOptions).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Response<ResponseBody> getCompletionsWithResponseStream(CompletionsOptions completionsOptions) {
+        try {
+            return service.getCompletionsStream(deploymentId,apiVersion,completionsOptions).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Observable<Completions> getCompletionsWithResponseAsync(CompletionsOptions completionsOptions) {
+        return service.getCompletionsAsync(deploymentId,apiVersion,completionsOptions);
     }
 
     public Response<ChatCompletions> getChatCompletionsWithResponse(ChatCompletionsOptions chatCompletionsOptions) {
@@ -46,6 +70,29 @@ public final class AzureClientImpl {
     }
 
     public interface AzureClientService {
+
+        @POST("openai/deployments/{deployment-id}/completions")
+        Call<Completions> getCompletions(
+                @Path(value = "deployment-id") String deploymentId,
+                @Query(value = "api-version") String apiVersion,
+                @Body CompletionsOptions completionsOptions
+        );
+
+        @POST("openai/deployments/{deployment-id}/completions")
+        @Streaming
+        Call<ResponseBody> getCompletionsStream(
+                @Path(value = "deployment-id") String deploymentId,
+                @Query(value = "api-version") String apiVersion,
+                @Body CompletionsOptions completionsOptions
+        );
+
+        @POST("openai/deployments/{deployment-id}/completions")
+        Observable<Completions> getCompletionsAsync(
+                @Path(value = "deployment-id") String deploymentId,
+                @Query(value = "api-version") String apiVersion,
+                @Body CompletionsOptions completionsOptions
+        );
+
 
         @POST("openai/deployments/{deployment-id}/chat/completions")
         Call<ChatCompletions> getChatCompletions(
