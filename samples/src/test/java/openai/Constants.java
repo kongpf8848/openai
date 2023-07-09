@@ -1,4 +1,4 @@
-package io.github.kongpf8848.openai;
+package openai;
 
 public class Constants {
 

@@ -1,5 +1,8 @@
-package io.github.kongpf8848.openai;
+package openai;
 
+import io.github.kongpf8848.openai.OpenAIAsyncClient;
+import io.github.kongpf8848.openai.OpenAIClient;
+import io.github.kongpf8848.openai.OpenAIClientBuilder;
 import io.github.kongpf8848.openai.core.IterableStream;
 import io.github.kongpf8848.openai.models.Completions;
 import io.github.kongpf8848.openai.models.CompletionsOptions;
