@@ -98,8 +98,7 @@ public class OpenAICompletionsTest {
         options.setModel("text-davinci-003")
                 .setMaxTokens(1000)
                 .setTemperature(0.8)
-                .setTopP(1.0)
-                .setPresencePenalty(1.0);
+                .setTopP(1.0);
         Observable<Completions> observable = client.getCompletionsStream(options);
         observable.subscribe(new Observer<Completions>() {
             @Override
