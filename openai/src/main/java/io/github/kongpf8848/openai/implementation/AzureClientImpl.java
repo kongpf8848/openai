@@ -11,7 +11,7 @@ import io.github.kongpf8848.openai.models.Completions;
 import io.github.kongpf8848.openai.models.CompletionsOptions;
 import io.github.kongpf8848.openai.sse.EventSource;
 import io.github.kongpf8848.openai.sse.EventSourceListener;
-import io.github.kongpf8848.openai.sse.internal.RealEventSource;
+import io.github.kongpf8848.openai.sse.EventSources;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -83,20 +83,21 @@ public final class AzureClientImpl {
         return Observable.create(new ObservableOnSubscribe<T>() {
             @Override
             public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+
                 ObjectMapper mapper = new ObjectMapper();
                 JavaType javaType = mapper.getTypeFactory().constructType(object.getClass());
                 ObjectWriter writer = mapper.writerFor(javaType);
                 byte[] bytes = writer.writeValueAsBytes(object);
+
                 Request request = new Request.Builder()
-                        .url(retrofit.baseUrl()+"openai/deployments/"+deploymentId+"/"+relativeUrl+"?api-version="+apiVersion)
-                        .method("POST", RequestBody.create(bytes, MediaType.parse("application/json")))
+                        .url(String.format("%sopenai/deployments/%s/%s?api-version=%s",retrofit.baseUrl(),deploymentId,relativeUrl,apiVersion))
+                        .post(RequestBody.create(bytes, MediaType.parse("application/json")))
                         .build();
 
-                RealEventSource eventSource = new RealEventSource(request, new EventSourceListener() {
+                EventSources.createFactory(retrofit.callFactory()).newEventSource(request, new EventSourceListener() {
                     @Override
                     public void onEvent(@NotNull EventSource eventSource, @Nullable String id, @Nullable String type, @NotNull String data) {
                         super.onEvent(eventSource, id, type, data);
-                        System.out.println("============onEvent:" + id + "," + type + "," + data);
                         JavaType javaType = mapper.getTypeFactory().constructType(returnType);
                         ObjectReader reader = mapper.readerFor(javaType);
                         try {
@@ -114,16 +115,13 @@ public final class AzureClientImpl {
                         emitter.onError(t);
                     }
 
-
                     @Override
                     public void onClosed(@NotNull EventSource eventSource) {
                         super.onClosed(eventSource);
                         System.out.println("============onClosed");
                         emitter.onComplete();
                     }
-
                 });
-                eventSource.connect(retrofit.callFactory());
             }
         });
     }

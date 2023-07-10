@@ -12,7 +12,7 @@ import io.github.kongpf8848.openai.models.Completions;
 import io.github.kongpf8848.openai.models.CompletionsOptions;
 import io.github.kongpf8848.openai.sse.EventSource;
 import io.github.kongpf8848.openai.sse.EventSourceListener;
-import io.github.kongpf8848.openai.sse.internal.RealEventSource;
+import io.github.kongpf8848.openai.sse.EventSources;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -29,6 +29,7 @@ import retrofit2.http.POST;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 
 public final class OpenAIClientImpl {
 
@@ -79,20 +80,22 @@ public final class OpenAIClientImpl {
         return Observable.create(new ObservableOnSubscribe<T>() {
             @Override
             public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+
                 ObjectMapper mapper = new ObjectMapper();
                 JavaType javaType = mapper.getTypeFactory().constructType(object.getClass());
                 ObjectWriter writer = mapper.writerFor(javaType);
                 byte[] bytes = writer.writeValueAsBytes(object);
+
+
                 Request request = new Request.Builder()
-                        .url(OpenAIConstants.OPEN_AI_ENDPOINT +relativeUrl)
-                        .method("POST", RequestBody.create(bytes, MediaType.parse("application/json")))
+                        .url(OpenAIConstants.OPEN_AI_ENDPOINT+relativeUrl)
+                        .post(RequestBody.create(bytes, MediaType.parse("application/json")))
                         .build();
 
-                RealEventSource eventSource = new RealEventSource(request, new EventSourceListener() {
+                EventSources.createFactory(retrofit.callFactory()).newEventSource(request, new EventSourceListener() {
                     @Override
                     public void onEvent(@NotNull EventSource eventSource, @Nullable String id, @Nullable String type, @NotNull String data) {
                         super.onEvent(eventSource, id, type, data);
-                        System.out.println("============onEvent:" + id + "," + type + "," + data);
                         JavaType javaType = mapper.getTypeFactory().constructType(returnType);
                         ObjectReader reader = mapper.readerFor(javaType);
                         try {
@@ -110,16 +113,13 @@ public final class OpenAIClientImpl {
                         emitter.onError(t);
                     }
 
-
                     @Override
                     public void onClosed(@NotNull EventSource eventSource) {
                         super.onClosed(eventSource);
                         System.out.println("============onClosed");
                         emitter.onComplete();
                     }
-
                 });
-                eventSource.connect(retrofit.callFactory());
             }
         });
     }
