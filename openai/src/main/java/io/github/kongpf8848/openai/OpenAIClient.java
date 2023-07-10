@@ -3,13 +3,10 @@ package io.github.kongpf8848.openai;
 import io.github.kongpf8848.openai.core.IterableStream;
 import io.github.kongpf8848.openai.implementation.AzureClientImpl;
 import io.github.kongpf8848.openai.implementation.OpenAIClientImpl;
-import io.github.kongpf8848.openai.implementation.OpenAIServerSentEvents;
 import io.github.kongpf8848.openai.models.ChatCompletions;
 import io.github.kongpf8848.openai.models.ChatCompletionsOptions;
 import io.github.kongpf8848.openai.models.Completions;
 import io.github.kongpf8848.openai.models.CompletionsOptions;
-import io.reactivex.Observable;
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 public final class OpenAIClient {
@@ -39,14 +36,9 @@ public final class OpenAIClient {
 
     public IterableStream<Completions> getCompletionsStream(CompletionsOptions completionsOptions) {
         completionsOptions.setStream(true);
-        Response<ResponseBody> response = openAIClient!=null
-                ? openAIClient.getCompletionsWithResponseStream(completionsOptions)
-                : azureClient.getCompletionsWithResponseStream(completionsOptions);
-        if (response == null || response.body() == null) {
-            return null;
-        }
-        OpenAIServerSentEvents<Completions> sse = new OpenAIServerSentEvents<>(Observable.just(response.body().source()), Completions.class);
-        return new IterableStream<>(sse.getEvents());
+        return openAIClient!=null
+                ? new IterableStream(openAIClient.getCompletionsWithResponseStream(completionsOptions))
+                : new IterableStream(azureClient.getCompletionsWithResponseStream(completionsOptions));
 
     }
 
@@ -62,14 +54,9 @@ public final class OpenAIClient {
 
     public IterableStream<ChatCompletions> getChatCompletionsStream(ChatCompletionsOptions chatCompletionsOptions) {
         chatCompletionsOptions.setStream(true);
-        Response<ResponseBody> response = openAIClient!=null
-                ? openAIClient.getChatCompletionsWithResponseStream(chatCompletionsOptions)
-                : azureClient.getChatCompletionsWithResponseStream(chatCompletionsOptions);
-        if (response == null || response.body() == null) {
-            return null;
-        }
-        OpenAIServerSentEvents<ChatCompletions> sse = new OpenAIServerSentEvents<>(Observable.just(response.body().source()), ChatCompletions.class);
-        return new IterableStream<>(sse.getEvents());
+        return openAIClient!=null
+                ? new IterableStream<>(openAIClient.getChatCompletionsWithResponseStream(chatCompletionsOptions))
+                : new IterableStream<>(azureClient.getChatCompletionsWithResponseStream(chatCompletionsOptions));
 
     }
 

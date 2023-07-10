@@ -1,10 +1,19 @@
-rootProject.name = 'openai-java'
-
-include 'openai'
-include 'samples'
+pluginManagement {
+    repositories{
+        mavenCentral()
+    }
+}
 
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
     }
 }
+
+
+rootProject.name = 'openai-java'
+
+include 'openai'
+include 'samples'
+
+

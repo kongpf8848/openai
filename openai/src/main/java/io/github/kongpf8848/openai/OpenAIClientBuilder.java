@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 public class OpenAIClientBuilder {
 
-    public static final String OPEN_AI_ENDPOINT = "https://api.openai.com/v1/";
-
     private boolean debug = true;
 
     public OpenAIClientBuilder debug(boolean debug) {
@@ -85,7 +83,7 @@ public class OpenAIClientBuilder {
 
 
     private OpenAIClientImpl buildInnerClient() {
-        Retrofit r = retrofit != null ? retrofit : createRetrofit(OPEN_AI_ENDPOINT,new OpenAIHeaderInterceptor(openAIKeyCredential.getKey()));
+        Retrofit r = retrofit != null ? retrofit : createRetrofit(OpenAIConstants.OPEN_AI_ENDPOINT,new OpenAIHeaderInterceptor(openAIKeyCredential.getKey()));
         OpenAIClientImpl client = new OpenAIClientImpl(r);
         return client;
     }
