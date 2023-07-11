@@ -130,5 +130,13 @@ public class OpenAICompletionsTest {
         }
     }
 
+    @Test
+    public void config(){
+        System.out.println("========OPENAI_API_KEY:"+Constants.OPENAI_API_KEY);
+        System.out.println("========AZURE_API_KEY:"+Constants.AZURE_API_KEY);
+        System.out.println("========AZURE_END_POINT:"+Constants.AZURE_END_POINT);
+        System.out.println("========AZURE_DEPLOYMENT_ID:"+Constants.AZURE_DEPLOYMENT_ID);
+    }
+
 
 }

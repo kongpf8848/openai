@@ -11,7 +11,7 @@ dependencyResolutionManagement {
 }
 
 
-rootProject.name = 'openai-java'
+rootProject.name = 'openai-root'
 
 include 'openai'
 include 'samples'

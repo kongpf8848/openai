@@ -66,7 +66,7 @@ public class AzureChatCompletionsTest {
                 .setTopP(1.0);
         IterableStream<ChatCompletions> completionsStream = getOpenAIClient().getChatCompletionsStream(options);
         completionsStream.forEach(completions -> {
-            System.out.println("========" + completions.getChoices().get(0).getDelta().getContent());
+            System.out.println("========" + completions.getChoices().get(0).getMessage().getContent());
         });
     }
 
@@ -126,7 +126,7 @@ public class AzureChatCompletionsTest {
 
             @Override
             public void onNext(ChatCompletions completions) {
-                System.out.println("========onNext:" + completions.getChoices().get(0).getDelta().getContent());
+                System.out.println("========onNext:" + completions.getChoices().get(0).getMessage().getContent());
             }
 
             @Override

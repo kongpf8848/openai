@@ -50,7 +50,7 @@ public class OpenAIChatCompletionsTest {
                 .setTopP(1.0);
         IterableStream<ChatCompletions> completionsStream = client.getChatCompletionsStream(options);
         completionsStream.forEach(completions -> {
-            System.out.println("========" + completions.getChoices().get(0).getDelta().getContent());
+            System.out.println("========" + completions.getChoices().get(0).getMessage().getContent());
         });
     }
 
@@ -117,7 +117,7 @@ public class OpenAIChatCompletionsTest {
 
             @Override
             public void onNext(ChatCompletions completions) {
-                System.out.println("========onNext:" + completions.getChoices().get(0).getDelta().getContent());
+                System.out.println("========onNext:" + completions.getChoices().get(0).getMessage().getContent());
             }
 
             @Override

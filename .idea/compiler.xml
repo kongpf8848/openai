@@ -3,8 +3,8 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
       <module name="openai-java.openai-api.main" target="1.8" />
+      <module name="openai-java.openai.main" target="1.8" />
       <module name="openai-root.openai-api.main" target="1.8" />
-      <module name="openai-root.openai.main" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
