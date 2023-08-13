@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ChatCompletionsOptions {
 
     @JsonProperty(value = "messages")
@@ -46,6 +45,12 @@ public final class ChatCompletionsOptions {
     @JsonProperty(value = "model")
     private String model;
 
+    @JsonProperty(value = "functions")
+    private List<ChatFunction> functions;
+
+
+    @JsonProperty(value = "function_call")
+    private String functionCall;
 
     @JsonCreator
     public ChatCompletionsOptions(@JsonProperty(value = "messages") List<ChatMessage> messages) {
@@ -153,5 +158,23 @@ public final class ChatCompletionsOptions {
     public ChatCompletionsOptions setModel(String model) {
         this.model = model;
         return this;
+    }
+
+    public ChatCompletionsOptions setFunctions(List<ChatFunction> functions) {
+        this.functions = functions;
+        return this;
+    }
+
+    public List<ChatFunction> getFunctions() {
+        return functions;
+    }
+
+
+    public String getFunctionCall() {
+        return functionCall;
+    }
+
+    public void setFunctionCall(String functionCall) {
+        this.functionCall = functionCall;
     }
 }

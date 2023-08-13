@@ -12,6 +12,7 @@ import io.github.kongpf8848.openai.models.CompletionsOptions;
 import io.github.kongpf8848.openai.sse.EventSource;
 import io.github.kongpf8848.openai.sse.EventSourceListener;
 import io.github.kongpf8848.openai.sse.EventSources;
+import io.github.kongpf8848.openai.utils.JacksonUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -84,7 +85,7 @@ public final class AzureClientImpl {
             @Override
             public void subscribe(ObservableEmitter<T> emitter) throws Exception {
 
-                ObjectMapper mapper = new ObjectMapper();
+                ObjectMapper mapper = JacksonUtils.defaultObjectMapper();
                 JavaType javaType = mapper.getTypeFactory().constructType(object.getClass());
                 ObjectWriter writer = mapper.writerFor(javaType);
                 byte[] bytes = writer.writeValueAsBytes(object);

@@ -11,6 +11,10 @@ public final class ChatMessage {
     @JsonProperty(value = "content")
     private String content;
 
+    @JsonProperty(value = "function_call")
+    private ChatFunctionCall function_call;
+
+
     @JsonCreator
     public ChatMessage(@JsonProperty(value = "role") String role) {
         this.role = role;

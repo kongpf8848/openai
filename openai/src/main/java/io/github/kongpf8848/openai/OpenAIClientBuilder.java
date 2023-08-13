@@ -1,11 +1,13 @@
 package io.github.kongpf8848.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kongpf8848.openai.implementation.AzureClientImpl;
 import io.github.kongpf8848.openai.implementation.OpenAIClientImpl;
 import io.github.kongpf8848.openai.interceptor.AzureHeaderInterceptor;
 import io.github.kongpf8848.openai.interceptor.OpenAIHeaderInterceptor;
 import io.github.kongpf8848.openai.models.AzureKeyCredential;
 import io.github.kongpf8848.openai.models.OpenAIKeyCredential;
+import io.github.kongpf8848.openai.utils.JacksonUtils;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -83,18 +85,18 @@ public class OpenAIClientBuilder {
 
 
     private OpenAIClientImpl buildInnerClient() {
-        Retrofit r = retrofit != null ? retrofit : createRetrofit(OpenAIConstants.OPEN_AI_ENDPOINT,new OpenAIHeaderInterceptor(openAIKeyCredential.getKey()));
+        Retrofit r = retrofit != null ? retrofit : defaultRetrofit(OpenAIConstants.OPEN_AI_ENDPOINT,new OpenAIHeaderInterceptor(openAIKeyCredential.getKey()));
         OpenAIClientImpl client = new OpenAIClientImpl(r);
         return client;
     }
 
     private AzureClientImpl buildInnerAzureClient() {
-        Retrofit r = retrofit != null ? retrofit : createRetrofit(endpoint,new AzureHeaderInterceptor(azureKeyCredential.getKey()));
+        Retrofit r = retrofit != null ? retrofit : defaultRetrofit(endpoint,new AzureHeaderInterceptor(azureKeyCredential.getKey()));
         AzureClientImpl client = new AzureClientImpl(r,deploymentId,apiVersion.getVersion());
         return client;
     }
 
-    private Retrofit createRetrofit(String endpoint, Interceptor authInterceptor) {
+    private Retrofit defaultRetrofit(String endpoint, Interceptor authInterceptor) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.readTimeout(30, TimeUnit.SECONDS);
@@ -109,7 +111,7 @@ public class OpenAIClientBuilder {
         return new Retrofit.Builder()
                 .baseUrl(endpoint)
                 .client(builder.build())
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(JacksonUtils.defaultObjectMapper()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
